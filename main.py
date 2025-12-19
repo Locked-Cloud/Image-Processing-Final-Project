@@ -1,3 +1,8 @@
+"""
+Image Processing Studio - Ultimate Control Version
+Individual controls for EVERY parameter in EVERY filter
+"""
+
 import cv2
 import numpy as np
 from skimage.color import rgb2gray
@@ -30,8 +35,8 @@ class UltimateControlGUI:
             # Canny Edge Detection
             'canny_kernel': 3,
             'canny_sigma': 0,
-            'canny_low_ratio': 0.1,
-            'canny_high_ratio': 0.2,
+            'canny_low_ratio': 30,  # Now direct threshold value (0-255)
+            'canny_high_ratio': 60,  # Now direct threshold value (0-255)
 
             # Frequency - ILPF
             'ilpf_radius': 30,
@@ -90,8 +95,8 @@ class UltimateControlGUI:
         top_bar.pack_propagate(False)
 
         tk.Label(top_bar, text="📷 Image Processing Studio - Ultimate Control",
-                bg='#1e1e1e', fg='#ffffff',
-                font=('Arial', 18, 'bold')).pack(side='left', padx=20)
+                 bg='#1e1e1e', fg='#ffffff',
+                 font=('Arial', 18, 'bold')).pack(side='left', padx=20)
 
         # Main buttons
         btn_frame = tk.Frame(top_bar, bg='#1e1e1e')
@@ -105,16 +110,16 @@ class UltimateControlGUI:
         self.camera_btn.pack(side='left', padx=5)
 
         tk.Button(btn_frame, text="📁 Load",
-                 command=self.load_image,
-                 bg='#2196F3', fg='white',
-                 font=('Arial', 11, 'bold'),
-                 width=10, height=2, relief='flat').pack(side='left', padx=5)
+                  command=self.load_image,
+                  bg='#2196F3', fg='white',
+                  font=('Arial', 11, 'bold'),
+                  width=10, height=2, relief='flat').pack(side='left', padx=5)
 
         tk.Button(btn_frame, text="💾 Save",
-                 command=self.save_image,
-                 bg='#FF9800', fg='white',
-                 font=('Arial', 11, 'bold'),
-                 width=10, height=2, relief='flat').pack(side='left', padx=5)
+                  command=self.save_image,
+                  bg='#FF9800', fg='white',
+                  font=('Arial', 11, 'bold'),
+                  width=10, height=2, relief='flat').pack(side='left', padx=5)
 
         # ========== MAIN CONTAINER ==========
         main = tk.Frame(self.root, bg='#2b2b2b')
@@ -130,13 +135,13 @@ class UltimateControlGUI:
         status_frame.pack_propagate(False)
 
         self.status = tk.Label(status_frame, text="Ready | Select a filter to see its controls",
-                              bg='#1e1e1e', fg='#00ff00',
-                              font=('Arial', 11, 'bold'), anchor='w')
+                               bg='#1e1e1e', fg='#00ff00',
+                               font=('Arial', 11, 'bold'), anchor='w')
         self.status.pack(side='left', fill='x', expand=True)
 
         self.fps = tk.Label(status_frame, text="",
-                           bg='#1e1e1e', fg='#ffffff',
-                           font=('Arial', 11))
+                            bg='#1e1e1e', fg='#ffffff',
+                            font=('Arial', 11))
         self.fps.pack(side='right')
 
         # Canvas
@@ -157,12 +162,12 @@ class UltimateControlGUI:
         """Create ultimate control panel"""
 
         tk.Label(parent, text="⚙️ ULTIMATE CONTROLS",
-                bg='#1e1e1e', fg='#ffffff',
-                font=('Arial', 14, 'bold')).pack(pady=(10, 5))
+                 bg='#1e1e1e', fg='#ffffff',
+                 font=('Arial', 14, 'bold')).pack(pady=(10, 5))
 
         tk.Label(parent, text="Every filter has its own dedicated controls below",
-                bg='#1e1e1e', fg='#ffd54f',
-                font=('Arial', 9, 'italic')).pack(pady=(0, 10))
+                 bg='#1e1e1e', fg='#ffd54f',
+                 font=('Arial', 9, 'italic')).pack(pady=(0, 10))
 
         # Scrollable area
         canvas = tk.Canvas(parent, bg='#1e1e1e', highlightthickness=0)
@@ -170,7 +175,7 @@ class UltimateControlGUI:
         scroll_frame = tk.Frame(canvas, bg='#1e1e1e')
 
         scroll_frame.bind("<Configure>",
-                         lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+                          lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
         canvas.create_window((0, 0), window=scroll_frame, anchor='nw')
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -200,8 +205,8 @@ class UltimateControlGUI:
         self.add_filter_with_controls(scroll_frame, "C", "Canny Edge", 'canny', [
             ('canny_kernel', "Kernel Size", 1, 31, 2, "3-7 optimal"),
             ('canny_sigma', "Gaussian Sigma", 0, 10, 1, "0=auto, 1-3 typical"),
-            ('canny_low_ratio', "Low Threshold Ratio", 0.0, 1.0, 0.05, "0.1 typical"),
-            ('canny_high_ratio', "High Threshold Ratio", 0.0, 1.0, 0.05, "0.2 typical"),
+            ('canny_low_ratio', "Low Threshold", 0, 255, 5, "30-100 typical"),
+            ('canny_high_ratio', "High Threshold", 0, 255, 5, "60-200 typical"),
         ])
 
         # ========== FREQUENCY FILTERS ==========
@@ -277,26 +282,26 @@ class UltimateControlGUI:
         # ========== RESET ==========
         self.add_section(scroll_frame, "🔄 RESET")
         tk.Button(scroll_frame, text="N - No Filter (Original)",
-                 command=lambda: self.set_filter(None),
-                 bg='#f44336', fg='white',
-                 font=('Arial', 10, 'bold'),
-                 height=2, relief='flat').pack(fill='x', padx=10, pady=5)
+                  command=lambda: self.set_filter(None),
+                  bg='#f44336', fg='white',
+                  font=('Arial', 10, 'bold'),
+                  height=2, relief='flat').pack(fill='x', padx=10, pady=5)
 
         # Info
         tk.Label(scroll_frame,
-                text="💡 Every filter has its own controls\n"
-                     "✏️ Click any value to type manually\n"
-                     "⌨️ Keyboard shortcuts still work",
-                bg='#1e1e1e', fg='#888888',
-                font=('Arial', 9, 'italic'),
-                justify='center').pack(pady=20)
+                 text="💡 Every filter has its own controls\n"
+                      "✏️ Click any value to type manually\n"
+                      "⌨️ Keyboard shortcuts still work",
+                 bg='#1e1e1e', fg='#888888',
+                 font=('Arial', 9, 'italic'),
+                 justify='center').pack(pady=20)
 
     def add_section(self, parent, title):
         frame = tk.Frame(parent, bg='#0d47a1', height=35)
         frame.pack(fill='x', padx=10, pady=(15, 5))
         frame.pack_propagate(False)
         tk.Label(frame, text=title, bg='#0d47a1', fg='#ffffff',
-                font=('Arial', 10, 'bold')).pack(anchor='w', padx=10, pady=8)
+                 font=('Arial', 10, 'bold')).pack(anchor='w', padx=10, pady=8)
 
     def add_filter_with_controls(self, parent, key, name, mode, controls):
         """Add filter button with its dedicated controls"""
@@ -308,14 +313,14 @@ class UltimateControlGUI:
         btn_frame.pack(fill='x', padx=5, pady=5)
 
         tk.Label(btn_frame, text=key, bg='#000000', fg='#00ff00',
-                font=('Consolas', 11, 'bold'),
-                width=4).pack(side='left', padx=5)
+                 font=('Consolas', 11, 'bold'),
+                 width=4).pack(side='left', padx=5)
 
         tk.Button(btn_frame, text=name,
-                 command=lambda: self.set_filter(mode),
-                 bg='#424242', fg='#ffffff',
-                 font=('Arial', 10, 'bold'),
-                 relief='flat', anchor='w').pack(side='left', fill='x', expand=True, padx=5)
+                  command=lambda: self.set_filter(mode),
+                  bg='#424242', fg='#ffffff',
+                  font=('Arial', 10, 'bold'),
+                  relief='flat', anchor='w').pack(side='left', fill='x', expand=True, padx=5)
 
         # Controls for this filter
         if controls:
@@ -335,11 +340,11 @@ class UltimateControlGUI:
         label_frame.pack(side='left', fill='x', expand=True)
 
         tk.Label(label_frame, text=label + ":", bg='#363636', fg='#ffffff',
-                font=('Arial', 8, 'bold'), anchor='w').pack(side='left')
+                 font=('Arial', 8, 'bold'), anchor='w').pack(side='left')
 
         tk.Label(label_frame, text=f"💡 {tip}",
-                bg='#363636', fg='#ffd54f',
-                font=('Arial', 7, 'italic'), anchor='w').pack(side='left', padx=5)
+                 bg='#363636', fg='#ffd54f',
+                 font=('Arial', 7, 'italic'), anchor='w').pack(side='left', padx=5)
 
         # Controls
         ctrl = tk.Frame(frame, bg='#363636')
@@ -347,17 +352,17 @@ class UltimateControlGUI:
 
         # Minus
         tk.Button(ctrl, text="−",
-                 command=lambda: self.adjust_param(param_key, -step, min_val, max_val),
-                 bg='#d32f2f', fg='white',
-                 font=('Arial', 9, 'bold'),
-                 width=2, relief='flat').pack(side='left', padx=1)
+                  command=lambda: self.adjust_param(param_key, -step, min_val, max_val),
+                  bg='#d32f2f', fg='white',
+                  font=('Arial', 9, 'bold'),
+                  width=2, relief='flat').pack(side='left', padx=1)
 
         # Entry
         entry = tk.Entry(ctrl,
-                        bg='#000000', fg='#00ff00',
-                        font=('Consolas', 9, 'bold'),
-                        width=7, justify='center',
-                        relief='flat', insertbackground='#00ff00')
+                         bg='#000000', fg='#00ff00',
+                         font=('Consolas', 9, 'bold'),
+                         width=7, justify='center',
+                         relief='flat', insertbackground='#00ff00')
         entry.pack(side='left', padx=3)
         entry.insert(0, str(self.params[param_key]))
 
@@ -368,10 +373,10 @@ class UltimateControlGUI:
 
         # Plus
         tk.Button(ctrl, text="+",
-                 command=lambda: self.adjust_param(param_key, step, min_val, max_val),
-                 bg='#388e3c', fg='white',
-                 font=('Arial', 9, 'bold'),
-                 width=2, relief='flat').pack(side='left', padx=1)
+                  command=lambda: self.adjust_param(param_key, step, min_val, max_val),
+                  bg='#388e3c', fg='white',
+                  font=('Arial', 9, 'bold'),
+                  width=2, relief='flat').pack(side='left', padx=1)
 
     def manual_entry(self, param_key, entry, min_val, max_val):
         try:
@@ -669,7 +674,7 @@ class UltimateControlGUI:
             return
 
         fh, fw = frame.shape[:2]
-        scale = min(w/fw, h/fh) * 0.95
+        scale = min(w / fw, h / fh) * 0.95
         nw, nh = int(fw * scale), int(fh * scale)
 
         resized = cv2.resize(frame, (nw, nh))
@@ -695,56 +700,56 @@ class UltimateControlGUI:
         return sobely
 
     def gradient_magnitude_func(self, sobelx, sobely):
-        gradient_magnitude = np.sqrt(sobelx**2 + sobely**2)
+        gradient_magnitude = np.sqrt(sobelx ** 2 + sobely ** 2)
         gradient_magnitude *= 255.0 / gradient_magnitude.max()
         return gradient_magnitude.astype(np.uint8)
 
     def Canny_edge_detection(self, frame, ksize):
+        # Use the improved Canny implementation with direct threshold values
+        low_threshold = self.params['canny_low_ratio']  # Direct threshold value (0-255)
+        high_threshold = self.params['canny_high_ratio']  # Direct threshold value (0-255)
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        blurred = cv2.GaussianBlur(gray, (ksize, ksize), 0)
-        gx = cv2.Sobel(blurred, cv2.CV_64F, 1, 0, ksize=ksize)
-        gy = cv2.Sobel(blurred, cv2.CV_64F, 0, 1, ksize=ksize)
-        grad_mag = np.hypot(gx, gy)
-        grad_mag = grad_mag / grad_mag.max() * 255
-        grad_angle = np.arctan2(gy, gx)
-        M, N = grad_mag.shape
+        blur = cv2.GaussianBlur(gray, (ksize, ksize), 0)
+        gx = cv2.Sobel(blur, cv2.CV_64F, 1, 0, ksize=ksize)
+        gy = cv2.Sobel(blur, cv2.CV_64F, 0, 1, ksize=ksize)
+        mag = np.hypot(gx, gy)
+        mag = (mag / mag.max()) * 255
+        ang = np.degrees(np.arctan2(gy, gx))
+        ang[ang < 0] += 180
+        M, N = mag.shape
         Z = np.zeros((M, N), dtype=np.float32)
-        angle = grad_angle * 180.0 / np.pi
-        angle[angle < 0] += 180
 
-        for i in range(1, M-1):
-            for j in range(1, N-1):
-                q = r = 255
-                if (0 <= angle[i,j] < 22.5) or (157.5 <= angle[i,j] <= 180):
-                    q, r = grad_mag[i, j+1], grad_mag[i, j-1]
-                elif 22.5 <= angle[i,j] < 67.5:
-                    q, r = grad_mag[i+1, j-1], grad_mag[i-1, j+1]
-                elif 67.5 <= angle[i,j] < 112.5:
-                    q, r = grad_mag[i+1, j], grad_mag[i-1, j]
-                elif 112.5 <= angle[i,j] < 157.5:
-                    q, r = grad_mag[i-1, j-1], grad_mag[i+1, j+1]
-                if grad_mag[i,j] >= q and grad_mag[i,j] >= r:
-                    Z[i,j] = grad_mag[i,j]
+        # Non-Max Suppression
+        for i in range(1, M - 1):
+            for j in range(1, N - 1):
+                angle = ang[i, j]
+                if (0 <= angle < 22.5) or (157.5 <= angle <= 180):
+                    q, r = mag[i, j + 1], mag[i, j - 1]
+                elif 22.5 <= angle < 67.5:
+                    q, r = mag[i + 1, j - 1], mag[i - 1, j + 1]
+                elif 67.5 <= angle < 112.5:
+                    q, r = mag[i + 1, j], mag[i - 1, j]
+                else:
+                    q, r = mag[i - 1, j - 1], mag[i + 1, j + 1]
+                if mag[i, j] >= q and mag[i, j] >= r:
+                    Z[i, j] = mag[i, j]
 
-        high_threshold = self.params['canny_high_ratio'] * Z.max()
-        low_threshold = self.params['canny_low_ratio'] * Z.max()
+        # Double Threshold using direct threshold values
         strong, weak = 255, 75
         res = np.zeros_like(Z, dtype=np.uint8)
-        strong_i, strong_j = np.where(Z >= high_threshold)
-        weak_i, weak_j = np.where((Z < high_threshold) & (Z >= low_threshold))
-        res[strong_i, strong_j] = strong
-        res[weak_i, weak_j] = weak
-        result = np.copy(res)
+        res[Z >= high_threshold] = strong
+        res[(Z < high_threshold) & (Z >= low_threshold)] = weak
 
-        for i in range(1, M-1):
-            for j in range(1, N-1):
-                if result[i,j] == weak:
-                    if any(result[i+di, j+dj] == strong
-                           for di in [-1, 0, 1] for dj in [-1, 0, 1]
-                           if not (di == 0 and dj == 0)):
-                        result[i,j] = strong
+        # Hysteresis
+        result = res.copy()
+        for i in range(1, M - 1):
+            for j in range(1, N - 1):
+                if result[i, j] == weak:
+                    if strong in result[i - 1:i + 2, j - 1:j + 2]:
+                        result[i, j] = strong
                     else:
-                        result[i,j] = 0
+                        result[i, j] = 0
 
         return result
 
@@ -789,7 +794,7 @@ class UltimateControlGUI:
         crow, ccol = rows // 2, cols // 2
         y, x = np.ogrid[:rows, :cols]
         D = np.sqrt((x - ccol) ** 2 + (y - crow) ** 2)
-        H = np.exp(-(D**2) / (2 * (D0**2)))
+        H = np.exp(-(D ** 2) / (2 * (D0 ** 2)))
         mask[:, :, 0] = H
         mask[:, :, 1] = H
         img_back, mag_display, _ = self.DFT_and_reconstruct(gray, filter_mask=mask)
@@ -803,7 +808,7 @@ class UltimateControlGUI:
         crow, ccol = rows // 2, cols // 2
         y, x = np.ogrid[:rows, :cols]
         D = np.sqrt((x - ccol) ** 2 + (y - crow) ** 2)
-        H = 1.0 / (1.0 + (D / (D0 + 1e-9))**(2 * n))
+        H = 1.0 / (1.0 + (D / (D0 + 1e-9)) ** (2 * n))
         mask[:, :, 0] = H
         mask[:, :, 1] = H
         img_back, mag_display, _ = self.DFT_and_reconstruct(gray, filter_mask=mask)
@@ -828,7 +833,7 @@ class UltimateControlGUI:
         crow, ccol = rows // 2, cols // 2
         y, x = np.ogrid[:rows, :cols]
         D = np.sqrt((x - ccol) ** 2 + (y - crow) ** 2)
-        H = 1.0 - np.exp(-(D**2) / (2 * (D0**2)))
+        H = 1.0 - np.exp(-(D ** 2) / (2 * (D0 ** 2)))
         mask[:, :, 0] = H
         mask[:, :, 1] = H
         img_back, mag_display, _ = self.DFT_and_reconstruct(gray, filter_mask=mask)
@@ -842,7 +847,7 @@ class UltimateControlGUI:
         crow, ccol = rows // 2, cols // 2
         y, x = np.ogrid[:rows, :cols]
         D = np.sqrt((x - ccol) ** 2 + (y - crow) ** 2)
-        H_low = 1.0 / (1.0 + (D / (D0 + 1e-9))**(2 * n))
+        H_low = 1.0 / (1.0 + (D / (D0 + 1e-9)) ** (2 * n))
         H = 1.0 - H_low
         mask[:, :, 0] = H
         mask[:, :, 1] = H
