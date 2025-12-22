@@ -1,8 +1,3 @@
-"""
-Image Processing Studio - Ultimate Control Version
-Individual controls for EVERY parameter in EVERY filter
-"""
-
 import cv2
 import numpy as np
 from skimage.color import rgb2gray
@@ -16,7 +11,7 @@ import time
 class UltimateControlGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Image Processing Studio - Ultimate Control")
+        self.root.title("Image Processing Studio")
         self.root.geometry("1700x900")
         self.root.configure(bg='#2b2b2b')
 
@@ -94,7 +89,7 @@ class UltimateControlGUI:
         top_bar.pack(fill='x')
         top_bar.pack_propagate(False)
 
-        tk.Label(top_bar, text="📷 Image Processing Studio - Ultimate Control",
+        tk.Label(top_bar, text="📷 Image Processing Studio",
                  bg='#1e1e1e', fg='#ffffff',
                  font=('Arial', 18, 'bold')).pack(side='left', padx=20)
 
@@ -161,7 +156,7 @@ class UltimateControlGUI:
     def create_controls(self, parent):
         """Create ultimate control panel"""
 
-        tk.Label(parent, text="⚙️ ULTIMATE CONTROLS",
+        tk.Label(parent, text="⚙️ CONTROLS",
                  bg='#1e1e1e', fg='#ffffff',
                  font=('Arial', 14, 'bold')).pack(pady=(10, 5))
 
