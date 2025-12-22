@@ -8,6 +8,7 @@ A comprehensive real-time image processing application with an intuitive GUI, fe
 
 ## ✨ Features
 
+
 ### 🎯 Real-Time Processing
 - **Live Camera Feed**: Process webcam input in real-time with instant filter application
 - **Static Image Processing**: Load and process images from disk with live parameter adjustment
