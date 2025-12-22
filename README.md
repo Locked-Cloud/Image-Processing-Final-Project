@@ -576,17 +576,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Tkinter**: GUI framework
 - **NumPy**: Numerical computations
 
-## 📧 Contact
-
-For questions, suggestions, or issues:
-- Open an issue on GitHub
-- Email: your.email@example.com
-- Twitter: @yourhandle
-
 ## 🌟 Star History
 
 If you find this project helpful, please consider giving it a star! ⭐
-
----
-
-**Made with ❤️ for the computer vision community**
